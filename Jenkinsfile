@@ -5,7 +5,7 @@ pipeline {
         IMAGE_NAME = 'react-ui'
         CONTAINER_NAME = 'react-ui'
         DOCKER_PORT = '4000'
-        VERSION = "${env.BUILD_NUMBER}" // or use GIT_COMMIT or a custom tag
+        VERSION = "${env.BUILD_NUMBER}"
     }
 
     stages {
@@ -21,6 +21,12 @@ pipeline {
             }
         }
 
+        stage('Docker Build') {
+            steps {
+                sh "docker build -t \$IMAGE_NAME:\$VERSION ."
+            }
+        }
+
         stage('Stop & Remove Old Container') {
             steps {
                 sh """
@@ -30,21 +36,26 @@ pipeline {
             }
         }
 
-        stage('Delete Old Image') {
-            steps {
-                sh "docker rmi -f \$IMAGE_NAME:\$VERSION || true"
-            }
-        }
-
-        stage('Docker Build') {
-            steps {
-                sh "docker build -t \$IMAGE_NAME:\$VERSION ."
-            }
-        }
-
         stage('Run New Container') {
             steps {
                 sh "docker run -d --name \$CONTAINER_NAME -p \$DOCKER_PORT:80 \$IMAGE_NAME:\$VERSION"
+            }
+        }
+
+        stage('Delete Old Images') {
+            steps {
+                script {
+                    // Remove older tagged versions of IMAGE_NAME except current
+                    sh """
+                    docker images --format "{{.Repository}}:{{.Tag}} {{.ID}}" | grep "^${IMAGE_NAME}:" | grep -v ":${VERSION}" | awk '{print \$2}' | xargs -r docker rmi -f || true
+                    """
+                }
+            }
+        }
+
+        stage('Prune Dangling Images') {
+            steps {
+                sh 'docker image prune -f'
             }
         }
     }
