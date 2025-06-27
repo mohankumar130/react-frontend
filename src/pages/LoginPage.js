@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./css/RegisterPage.css"; // Reusing styles
+import "./css/RegisterPage.css"; // Reusing register styles
 
 function LoginPage() {
   const [credentials, setCredentials] = useState({ username: "", password: "" });
@@ -10,28 +10,28 @@ function LoginPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert(`Logging in:\n${JSON.stringify(credentials, null, 2)}`);
+
+    let loginInput = credentials.username.trim();
+    if (/^\d{10}$/.test(loginInput)) {
+      loginInput = `+91${loginInput}`;
+    }
+
+    alert(`🔐 Logging in:\n${JSON.stringify({ ...credentials, username: loginInput }, null, 2)}`);
   };
 
   return (
     <div className="app">
       <div className="card">
-        <div className="login-icon">🔐</div>
-        <h2>Login</h2>
+        <h2>🔐 Login</h2>
         <form onSubmit={handleSubmit}>
-          <div className="mobile-group">
-            <span className="mobile-prefix">+91</span>
-            <input
-              type="text"
-              name="username"
-              placeholder="Mobile / Username"
-              required
-              maxLength="10"
-              pattern="\d{10}"
-              value={credentials.username}
-              onChange={handleChange}
-            />
-          </div>
+          <input
+            type="text"
+            name="username"
+            placeholder="Username or Mobile Number"
+            required
+            value={credentials.username}
+            onChange={handleChange}
+          />
           <input
             type="password"
             name="password"
