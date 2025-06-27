@@ -1,21 +1,22 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "./css/HomePage.css";
 
 function HomePage() {
   return (
     <div className="home-wrapper">
-      <header className="navbar">
-        <h2 className="logo">🌐 MyApp</h2>
+      <div className="navbar">
+        <div className="logo">🤖 AI DevOps</div>
         <div className="nav-links">
-          <a href="/login">🔐 Login</a>
-          <a href="/register">📝 Register</a>
+          <Link to="/login">Login</Link>
+          <Link to="/register">Register</Link>
         </div>
-      </header>
-
-      <main className="home-content">
-        <h1>🏠 Welcome to the Home Page</h1>
-        <p>Coming Soon!!!!!!!!!!!!</p>
-      </main>
+      </div>
+      <div className="home-content">
+        <h1>Welcome to AI-Driven DevOps</h1>
+        <p>Empowering automation and innovation with intelligent systems and seamless CI/CD pipelines.</p>
+        <Link to="/register" className="cta-button">Start Free</Link>
+      </div>
     </div>
   );
 }
