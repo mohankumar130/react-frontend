@@ -18,7 +18,6 @@ pipeline {
         stage('Git Checkout') {
             steps {
                 git branch: 'main', url: 'https://github.com/mohankumar130/react-frontend.git'
-                }
             }
         }
 
@@ -52,7 +51,7 @@ pipeline {
 
     post {
         success {
-            echo "✅ Deployed Docker Image: $IMAGE_NAME:$VERSION"
+            echo "✅ Deployed Docker Image: ${env.IMAGE_NAME}:${env.VERSION}"
         }
         failure {
             echo '❌ Deployment failed.'
