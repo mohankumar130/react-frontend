@@ -19,8 +19,7 @@ function RegisterPage() {
     const { name, value, type, checked } = e.target;
 
     if (name === "mobile") {
-      // Allow only numbers, max 10 digits
-      const digitsOnly = value.replace(/\D/g, "").slice(0, 10);
+      const digitsOnly = value.replace(/\D/g, "").slice(0, 10); // Allow only 10 digits
       setFormData((prev) => ({ ...prev, [name]: digitsOnly }));
     } else {
       setFormData((prev) => ({
@@ -37,7 +36,12 @@ function RegisterPage() {
     if (!/^\d{10}$/.test(formData.mobile)) return alert("Mobile number must be 10 digits.");
     if (formData.password !== formData.confirmPassword) return alert("Passwords do not match!");
 
-    alert(`✅ Registered successfully!\n\n${JSON.stringify(formData, null, 2)}`);
+    const finalData = {
+      ...formData,
+      mobile: `+91${formData.mobile}`,
+    };
+
+    alert(`✅ Registered successfully!\n\n${JSON.stringify(finalData, null, 2)}`);
   };
 
   return (
@@ -81,17 +85,14 @@ function RegisterPage() {
             onChange={handleChange}
           />
 
-          <div className="mobile-group">
-            <span className="mobile-prefix">+91</span>
-            <input
-              type="tel"
-              name="mobile"
-              placeholder="Mobile Number"
-              required
-              value={formData.mobile}
-              onChange={handleChange}
-            />
-          </div>
+          <input
+            type="tel"
+            name="mobile"
+            placeholder="Mobile Number"
+            required
+            value={formData.mobile}
+            onChange={handleChange}
+          />
 
           <input
             type="password"
@@ -123,6 +124,7 @@ function RegisterPage() {
               I agree to the <span className="terms-link" onClick={() => setShowTerms(true)}>Terms and Conditions</span>
             </label>
           </div>
+
           <button type="submit" className="register-btn">Register</button>
         </form>
 
@@ -134,9 +136,7 @@ function RegisterPage() {
                 By registering, you agree to abide by our application policies and data usage rules.
                 Your account may be suspended for violations.
               </p>
-              <button onClick={() => setShowTerms(false)} className="close-btn">
-                Close
-              </button>
+              <button onClick={() => setShowTerms(false)} className="close-btn">Close</button>
             </div>
           </div>
         )}
