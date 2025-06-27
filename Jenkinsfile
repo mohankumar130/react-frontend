@@ -44,7 +44,7 @@ pipeline {
 
         stage('Run New Container') {
             steps {
-                sh "docker run -d --name \$CONTAINER_NAME -p \$DOCKER_PORT:\$DOCKER_PORT \$IMAGE_NAME:\$VERSION"
+                sh "docker run -d --name \$CONTAINER_NAME -p \$DOCKER_PORT:80 \$IMAGE_NAME:\$VERSION"
             }
         }
     }
