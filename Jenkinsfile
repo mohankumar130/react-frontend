@@ -17,7 +17,7 @@ pipeline {
 
         stage('Git Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/your/repo.git
+                git branch: 'main', url: 'https://github.com/mohankumar130/react-frontend.git'
                 }
             }
         }
