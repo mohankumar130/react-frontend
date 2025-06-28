@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./css/RegisterPage.css";
+import "./css/RegisterPage.css"; // Optional CSS styling
 
 function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -19,7 +19,7 @@ function RegisterPage() {
     const { name, value, type, checked } = e.target;
 
     if (name === "mobile") {
-      const digitsOnly = value.replace(/\D/g, "").slice(0, 10); // Allow only 10 digits
+      const digitsOnly = value.replace(/\D/g, "").slice(0, 10); // Limit to 10 digits
       setFormData((prev) => ({ ...prev, [name]: digitsOnly }));
     } else {
       setFormData((prev) => ({
@@ -29,7 +29,7 @@ function RegisterPage() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!formData.terms) return alert("Please agree to the terms and conditions.");
@@ -37,11 +37,37 @@ function RegisterPage() {
     if (formData.password !== formData.confirmPassword) return alert("Passwords do not match!");
 
     const finalData = {
-      ...formData,
-      mobile: `+91${formData.mobile}`,
+      username: formData.username,
+      email: formData.email,
+      first_name: formData.firstname,
+      last_name: formData.lastname,
+      mobile_number: `+91${formData.mobile}`,
+      password: formData.password,
+      confirmPassword: formData.confirmPassword,
     };
 
-    alert(`✅ Registered successfully!\n\n${JSON.stringify(finalData, null, 2)}`);
+    try {
+      const res = await fetch("http://172.25.54.219:3000/api/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(finalData)
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        alert("✅ Registered successfully!");
+        // Optionally redirect to login
+        // window.location.href = "/login";
+      } else {
+        alert(`❌ ${data.message}`);
+      }
+    } catch (err) {
+      console.error("Registration error:", err);
+      alert("Something went wrong. Try again.");
+    }
   };
 
   return (
