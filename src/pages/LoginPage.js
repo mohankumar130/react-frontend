@@ -8,7 +8,7 @@ function LoginPage() {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     let loginInput = credentials.username.trim();
@@ -16,7 +16,31 @@ function LoginPage() {
       loginInput = `+91${loginInput}`;
     }
 
-    alert(`🔐 Logging in:\n${JSON.stringify({ ...credentials, username: loginInput }, null, 2)}`);
+    try {
+      const res = await fetch("http://172.25.54.219:3000/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          username: loginInput,
+          password: credentials.password
+        })
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        alert("✅ Login successful!");
+        localStorage.setItem("token", data.token);
+        window.location.href = "/dashboard";
+      } else {
+        alert(`❌ ${data.message}`);
+      }
+    } catch (err) {
+      console.error("Login error:", err);
+      alert("Something went wrong. Try again.");
+    }
   };
 
   return (
