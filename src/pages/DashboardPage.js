@@ -1,0 +1,61 @@
+import React, { useEffect, useState } from "react";
+
+function DashboardPage() {
+  const [user, setUser] = useState(null);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      setError("Not logged in. Redirecting to login...");
+      setTimeout(() => {
+        window.location.href = "/login";
+      }, 2000);
+      return;
+    }
+
+    fetch("http://172.25.54.219:3000/api/profile", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.user) {
+          setUser(data.user);
+        } else {
+          setError("Invalid token. Please login again.");
+          localStorage.removeItem("token");
+          setTimeout(() => {
+            window.location.href = "/login";
+          }, 2000);
+        }
+      })
+      .catch((err) => {
+        console.error("Dashboard fetch error:", err);
+        setError("Something went wrong.");
+      });
+  }, []);
+
+  return (
+    <div className="app">
+      <div className="card">
+        <h2>📊 Dashboard</h2>
+        {error && <p style={{ color: "red" }}>{error}</p>}
+        {user ? (
+          <div>
+            <p>Welcome, <strong>{user.username}</strong>!</p>
+            <p>Email: {user.email}</p>
+            <p>User ID: {user.id}</p>
+          </div>
+        ) : (
+          !error && <p>Loading user info...</p>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export default DashboardPage;
