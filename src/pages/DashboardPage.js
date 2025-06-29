@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./css/GamerDashboard.css";
+import QuizGame from "./QuizGame";
+
 
 function DashboardPage() {
   const [user, setUser] = useState(null);
@@ -66,8 +68,7 @@ function DashboardPage() {
 
           <div className="card">
             <h3>🧠 Quiz Game</h3>
-            <p>3 Gaming questions</p>
-            <button onClick={() => alert("Quiz coming soon!")}>Play</button>
+            <QuizGame />
           </div>
 
           <div className="card">
