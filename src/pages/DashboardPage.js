@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./css/GamerDashboard.css";
 import QuizGame from "./QuizGame";
 
@@ -68,7 +69,8 @@ function DashboardPage() {
 
           <div className="card">
             <h3>🧠 Quiz Game</h3>
-            <QuizGame />
+            <p>Challenge your brain with 3 gaming questions!</p>
+            <button onClick={() => navigate("/quiz")}>Play</button>
           </div>
 
           <div className="card">
@@ -89,3 +91,4 @@ function DashboardPage() {
 }
 
 export default DashboardPage;
+const navigate = useNavigate();
