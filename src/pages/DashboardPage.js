@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import "./css/GamerDashboard.css"; // 💡 Create this CSS file
 
 function DashboardPage() {
   const [user, setUser] = useState(null);
@@ -18,8 +19,8 @@ function DashboardPage() {
     fetch("http://172.25.54.219:3000/api/profile", {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${token}`
-      }
+        Authorization: `Bearer ${token}`,
+      },
     })
       .then((res) => res.json())
       .then((data) => {
@@ -40,18 +41,19 @@ function DashboardPage() {
   }, []);
 
   return (
-    <div className="app">
-      <div className="card">
-        <h2>📊 Dashboard</h2>
-        {error && <p style={{ color: "red" }}>{error}</p>}
+    <div className="gamer-dashboard">
+      <div className="dashboard-card">
+        <h2>🎮 Welcome to GamerHub</h2>
+        {error && <p className="error-msg">{error}</p>}
+
         {user ? (
-          <div>
-            <p>Welcome, <strong>{user.username}</strong>!</p>
-            <p>Email: {user.email}</p>
-            <p>User ID: {user.id}</p>
+          <div className="user-info">
+            <p>👤 <strong>{user.username}</strong></p>
+            <p>📧 {user.email}</p>
+            <p>🆔 User ID: {user.id}</p>
           </div>
         ) : (
-          !error && <p>Loading user info...</p>
+          !error && <p className="loading-text">🔄 Loading player stats...</p>
         )}
       </div>
     </div>
