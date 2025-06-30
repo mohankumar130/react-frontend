@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import "./css/GamerDashboard.css";
-import QuizGame from "./QuizGame";
-
 
 function DashboardPage() {
   const [user, setUser] = useState(null);
@@ -38,57 +35,24 @@ function DashboardPage() {
       });
   }, []);
 
-  const games = ["Valorant", "Call of Duty", "GTA V", "PUBG", "FIFA 24"];
-
   return (
-    <div className="dashboard-wrapper">
-      {user && (
-        <div className="profile-info">
-          <img
-            src={`https://api.dicebear.com/7.x/bottts/svg?seed=${user.username}`}
-            alt="Profile"
-          />
-          <span>{user.username}</span>
-        </div>
-      )}
-
-      <div className="dashboard-content">
-        <h1>🎮 GamerHub Dashboard</h1>
-
+    <div className="gamer-dashboard">
+      <div className="dashboard-card">
+        <h2>🎮 Welcome to GamerHub</h2>
         {error && <p className="error-msg">{error}</p>}
 
-        <div className="card-grid">
-          <div className="card">
-            <h3>🎯 Game List</h3>
-            <ul>
-              {games.map((game, index) => (
-                <li key={index}>🎮 {game}</li>
-              ))}
-            </ul>
+        {user ? (
+          <div className="user-info">
+            <p>👋 Hello, <strong>{user.username}</strong>!</p>
+            <p>🆔 User ID: {user.id}</p>
+            <p>🚧 Games are coming soon. Stay tuned!</p>
           </div>
-
-          <div className="card">
-            <h3>🧠 Quiz Game</h3>
-            <p>Challenge your brain with 3 gaming questions!</p>
-            <button onClick={() => navigate("/quiz")}>Play</button>
-          </div>
-
-          <div className="card">
-            <h3>🎲 Number Guess</h3>
-            <p>Guess the number between 1–10</p>
-            <button onClick={() => alert("Number Guess coming soon!")}>Play</button>
-          </div>
-
-          <div className="card">
-            <h3>🧩 Sudoku</h3>
-            <p>Challenge your brain</p>
-            <button disabled>Coming Soon</button>
-          </div>
-        </div>
+        ) : (
+          !error && <p className="loading-text">🔄 Loading player info...</p>
+        )}
       </div>
     </div>
   );
 }
 
 export default DashboardPage;
-const navigate = useNavigate();
