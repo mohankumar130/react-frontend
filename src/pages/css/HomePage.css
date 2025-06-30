@@ -1,7 +1,7 @@
 .home-wrapper {
   background: 
     linear-gradient(to right, rgba(0,0,0,0.85), rgba(26,26,46,0.85)),
-    url("https://images.unsplash.com/photo-???") no-repeat center center/cover;
+    url("https://images.unsplash.com/photo-1603791440384-56cd371ee9a7") no-repeat center center/cover;
   /* Replace the Unsplash URL above with one of the DevOps images */
   /* Example: url("https://…/devops-infini-loop-bg.jpg") */
   background-size: cover;
