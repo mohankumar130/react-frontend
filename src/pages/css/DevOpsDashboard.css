@@ -1,0 +1,93 @@
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #0f0f0f;
+  color: #ffffff;
+}
+
+.devops-dashboard {
+  padding: 30px;
+  min-height: 100vh;
+  background: linear-gradient(to right, #0f0f0f, #1c1c1c);
+}
+
+.devops-dashboard h1 {
+  font-size: 2rem;
+  color: #00ffa2;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.devops-dashboard p {
+  font-size: 1.1rem;
+  text-align: center;
+  color: #cccccc;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 25px;
+  margin-top: 30px;
+}
+
+.devops-card {
+  background-color: #1e1e1e;
+  border-left: 5px solid #00ffa2;
+  border-radius: 12px;
+  padding: 20px;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s;
+  box-shadow: 0 0 10px rgba(0, 255, 162, 0.1);
+}
+
+.devops-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 15px rgba(0, 255, 162, 0.4);
+}
+
+.devops-card h3 {
+  margin: 0 0 10px;
+  color: #00ffa2;
+  font-size: 1.3rem;
+}
+
+.devops-card p {
+  margin: 0;
+  color: #b0b0b0;
+  font-size: 1rem;
+}
+
+/* Profile bar (reusable if needed) */
+.profile-info {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 8px 16px;
+  border-radius: 12px;
+  border: 1px solid #00ffa2;
+}
+
+.profile-info img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.logout-btn {
+  background-color: transparent;
+  border: 1px solid #ff3e3e;
+  color: #ff3e3e;
+  padding: 5px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.logout-btn:hover {
+  background-color: #ff3e3e;
+  color: #fff;
+}
