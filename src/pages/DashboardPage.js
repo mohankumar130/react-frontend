@@ -57,14 +57,14 @@ function DashboardPage() {
       )}
 
       <div className="dashboard-card">
-      <h2>🎮 Welcome to GamerHub</h2>
+      <h2>🎮 Welcome to DevopsHub</h2>
       {error && <p className="error-msg">{error}</p>}
 
       {user ? (
         <div className="user-info">
           <p>👋 Hello, <strong>{user.username}</strong>!</p>
           <p>🆔 User ID: {user.id}</p>
-          <p>🚧 Games are coming soon. Stay tuned!</p>
+          <p>🚧 Devops Learning Path are coming soon. Stay tuned!</p>
 
           {/* 🔧 DevOps Button */}
           <button className="devops-btn" onClick={() => navigate("/devops")}>
