@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./css/GamerDashboard.css";
 
 function DashboardPage() {
   const [user, setUser] = useState(null);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
 
     if (!token) {
       setError("Not logged in. Redirecting to login...");
-      setTimeout(() => window.location.href = "/login", 2000);
+      setTimeout(() => navigate("/login"), 2000);
       return;
     }
 
@@ -26,17 +28,34 @@ function DashboardPage() {
         } else {
           setError("Invalid token. Please login again.");
           localStorage.removeItem("token");
-          setTimeout(() => window.location.href = "/login", 2000);
+          setTimeout(() => navigate("/login"), 2000);
         }
       })
       .catch((err) => {
         console.error("Dashboard fetch error:", err);
         setError("Something went wrong.");
       });
-  }, []);
+  }, [navigate]);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/login");
+  };
 
   return (
     <div className="gamer-dashboard">
+      {user && (
+        <div className="profile-info">
+          <img
+            src={`https://api.dicebear.com/7.x/bottts/svg?seed=${user.username}`}
+            alt="Profile"
+          />
+          <span>{user.username}</span>
+          <button className="logout-btn" onClick={handleLogout}>Logout</button>
+        </div>
+      )}
+
       <div className="dashboard-card">
         <h2>🎮 Welcome to GamerHub</h2>
         {error && <p className="error-msg">{error}</p>}

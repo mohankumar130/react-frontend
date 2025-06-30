@@ -52,9 +52,9 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
-  background: rgba(0, 0, 0, 0.6);
-  padding: 6px 12px;
-  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 8px 16px;
+  border-radius: 12px;
   border: 1px solid #00ff99;
 }
 
@@ -63,3 +63,19 @@ body {
   height: 40px;
   border-radius: 50%;
 }
+
+.logout-btn {
+  background-color: transparent;
+  border: 1px solid #ff3e3e;
+  color: #ff3e3e;
+  padding: 5px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.logout-btn:hover {
+  background-color: #ff3e3e;
+  color: #fff;
+}
+
