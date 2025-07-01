@@ -41,8 +41,10 @@ pipeline {
         stage('Docker Build') {
             steps {
                 sh """
-                sh "docker build --cache-from=msy061618/react-ui:latest -t ${FULL_IMAGE_NAME} -t ${LATEST_TAG} ."
-                """
+                docker build --cache-from=msy061618/react-ui:latest \
+                            -t msy061618/react-ui:${VERSION} \
+                            -t msy061618/react-ui:latest .
+                            """
             }
         }
 
