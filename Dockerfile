@@ -1,9 +1,17 @@
 # Stage 1: Build React app
 FROM node:20-alpine as build
 WORKDIR /app
-COPY package*.json ./
+
+# Step 1: Copy only package files to leverage cache
+COPY package.json package-lock.json ./
+
+# Step 2: Install dependencies (will be cached if package files don’t change)
 RUN npm install
+
+# Step 3: Copy the rest of the source code
 COPY . .
+
+# Step 4: Build React app
 RUN npm run build
 
 # Stage 2: Serve with Nginx

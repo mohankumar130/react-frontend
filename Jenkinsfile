@@ -32,19 +32,16 @@ pipeline {
             }
         }
 
-        stage('Pull Cache Image') {
+        stage('Pull Existing Image for Cache') {
             steps {
-                script {
-                    // Try pulling the latest image to use for cache
-                    sh "docker pull ${LATEST_TAG} || true"
-                }
+                sh "docker pull your-dockerhub-username/react-ui:latest || true"
             }
         }
 
         stage('Docker Build') {
             steps {
                 sh """
-                docker build --cache-from=${LATEST_TAG} -t ${FULL_IMAGE_NAME} -t ${LATEST_TAG} .
+                sh "docker build --cache-from=your-dockerhub-username/react-ui:latest -t ${FULL_IMAGE_NAME} -t ${LATEST_TAG} ."
                 """
             }
         }
