@@ -6,7 +6,7 @@ function HomePage() {
   return (
     <div className="home-wrapper">
       <div className="navbar">
-        <div className="logo">🤖 AI DevOps</div>
+        <div className="logo">🤖 AI DevOps Learning</div>
         <div className="nav-links">
           <Link to="/login">Login</Link>
           <Link to="/register">Register</Link>
