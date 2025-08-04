@@ -19,5 +19,7 @@ FROM nginx:alpine
 COPY --from=build /app/build /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
+RUN apk update && apk upgrade libxml2
+
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
