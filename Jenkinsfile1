@@ -1,0 +1,65 @@
+pipeline {
+    agent any
+
+    environment {
+        AWS_REGION = 'ap-south-1'
+        ECR_REPO = '123456789012.dkr.ecr.ap-south-1.amazonaws.com/react-app'
+        IMAGE_TAG = "${BUILD_NUMBER}"
+    }
+
+    stages {
+        stage('Clean Workspace') {
+            steps {
+                deleteDir()
+            }
+        }
+
+        stage('Git Checkout') {
+            steps {
+                git branch: 'dev', url: 'https://github.com/mohankumar130/react-frontend.git'
+            }
+        }
+
+        stage('Docker Build') {
+            steps {
+                sh """
+                docker build -t ${ECR_REPO}:${IMAGE_TAG} \
+                             -t ${ECR_REPO}:latest .
+                """
+            }
+        }
+
+        stage('Login to AWS ECR') {
+            steps {
+                sh """
+                aws ecr get-login-password --region ${AWS_REGION} | \
+                docker login --username AWS --password-stdin ${ECR_REPO}
+                """
+            }
+        }
+
+        stage('Push to ECR') {
+            steps {
+                sh """
+                docker push ${ECR_REPO}:${IMAGE_TAG}
+                docker push ${ECR_REPO}:latest
+                """
+            }
+        }
+
+        stage('Cleanup') {
+            steps {
+                sh 'docker image prune -f'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "✅ Successfully pushed to ECR: ${ECR_REPO}:${IMAGE_TAG}"
+        }
+        failure {
+            echo "❌ Build or push to ECR failed."
+        }
+    }
+}
