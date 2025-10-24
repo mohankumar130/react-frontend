@@ -1,0 +1,28 @@
+version: 0.2
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to ECR
+      - aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin $ECR_REPO_URI
+      - IMAGE_TAG=$(date +%Y%m%d%H%M%S)
+  build:
+    commands:
+      - echo Build Docker image
+      - docker build -t react-frontend-app:$IMAGE_TAG .
+      - docker tag react-frontend:$IMAGE_TAG $ECR_REPO_URI:$IMAGE_TAG
+  post_build:
+    commands:
+      - echo Push Docker image
+      - docker push $ECR_REPO_URI:$IMAGE_TAG
+      - echo Run ECS task
+      - TASK_ARN=$(aws ecs run-task \
+          --cluster $CLUSTER_NAME \
+          --launch-type FARGATE \
+          --task-definition $TASK_DEF_NAME \
+          --network-configuration "awsvpcConfiguration={subnets=[$SUBNETS],securityGroups=[$SECURITY_GROUPS],assignPublicIp=ENABLED}" \
+          --query 'tasks[0].taskArn' --output text)
+      - echo TASK_ARN=$TASK_ARN
+      - aws ecs wait tasks-stopped --cluster $CLUSTER_NAME --tasks $TASK_ARN
+artifacts:
+  files:
+    - ecs_task.txt
