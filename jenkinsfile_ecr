@@ -1,0 +1,90 @@
+pipeline {
+    agent any
+
+    environment {
+        AWS_REGION = 'ap-south-1'                       // Change to your AWS region
+        ECR_REPO_NAME = 'react-app'                   // Change to your ECR repository name
+        AWS_ACCOUNT_ID = '167872550339'                 // Change to your AWS Account ID
+        IMAGE_TAG = "${BUILD_NUMBER}"                   // Auto tag based on Jenkins build number
+        ECR_URL = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                echo "Checking out source code..."
+                checkout scm
+            }
+        }
+
+        stage('Login to AWS ECR') {
+            steps {
+                echo "Logging in to Amazon ECR..."
+                withCredentials([[
+                    $class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'aws-access-key',       // Use your Jenkins AWS credential ID
+                    accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                    secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                ]]) {
+                    script {
+                        sh """
+                        aws ecr get-login-password --region ${AWS_REGION} \
+                        | docker login --username AWS --password-stdin ${ECR_URL}
+                        """
+                    }
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                echo "Building Docker image..."
+                script {
+                    sh """
+                    docker build -t ${ECR_REPO_NAME}:${IMAGE_TAG} .
+                    docker tag ${ECR_REPO_NAME}:${IMAGE_TAG} ${ECR_URL}/${ECR_REPO_NAME}:${IMAGE_TAG}
+                    """
+                }
+            }
+        }
+
+        stage('Push to ECR') {
+            steps {
+                echo "Pushing Docker image to ECR..."
+                withCredentials([[
+                    $class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'aws-access-key',
+                    accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                    secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                ]]) {
+                    script {
+                        sh """
+                        docker push ${ECR_URL}/${ECR_REPO_NAME}:${IMAGE_TAG}
+                        """
+                    }
+                }
+            }
+        }
+
+        stage('Cleanup') {
+            steps {
+                echo "Cleaning up local Docker images..."
+                script {
+                    sh """
+                    docker rmi ${ECR_REPO_NAME}:${IMAGE_TAG} || true
+                    docker rmi ${ECR_URL}/${ECR_REPO_NAME}:${IMAGE_TAG} || true
+                    """
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "✅ Docker image pushed successfully to ECR: ${ECR_URL}/${ECR_REPO_NAME}:${IMAGE_TAG}"
+        }
+        failure {
+            echo "❌ Docker build or push failed!"
+        }
+    }
+}
